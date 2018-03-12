@@ -17,8 +17,8 @@ const connectToDB = async () => {
 connectToDB();
 
 client.query(`
-  drop table questions cascade;
-  drop table question_choices;
+  drop table if exists questions cascade;
+  drop table if exists question_choices;
 
   create table if not exists users (
     id serial primary key,
