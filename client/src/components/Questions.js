@@ -16,7 +16,10 @@ class Questions extends Component {
         // go through questionsAndAnswerChoices and add data for each question in an object in the questions array
         questionsAndAnswerChoices.data.forEach((question) => {
           if(!questions[question.question_id]) {
-            questions[question.question_id] = {question: question.question_content, answer_choices: [question.question_choice_content], correct_answer: question.correct_answer};
+            questions[question.question_id] = {
+              question: question.question_content, 
+              answer_choices: [question.question_choice_content], 
+              correct_answer: question.correct_answer};
           } else {
             questions[question.question_id].answer_choices.push(question.question_choice_content);
           }

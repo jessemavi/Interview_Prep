@@ -16,4 +16,19 @@ gameRouter.get('/questions', async (req, res) => {
   }
 });
 
+// take user and score from request body and add to db
+// send back user and score
+gameRouter.post('/add-score', async (req, res) => {
+  try {
+    console.log(req.body);
+    const addedScore = await db.query(`
+      insert into game_scores (score, user_id) values (${req.body.score}, ${req.body.user_id})
+      returning *;
+    `);
+    res.send(addedScore.rows[0]);
+  } catch(err) {
+    console.log(err);
+  }
+});
+
 module.exports = gameRouter;
