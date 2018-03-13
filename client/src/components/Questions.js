@@ -12,7 +12,7 @@ class Questions extends Component {
     const getAllQuestionsAndAnswerChoices = async () => {
       try {
         const questionsAndAnswerChoices = await axios.get('/game/questions');
-        console.log(questionsAndAnswerChoices.data);
+        // console.log(questionsAndAnswerChoices.data);
         const questions = [];
         // go through questionsAndAnswerChoices and add data for each question in an object in the questions array
         questionsAndAnswerChoices.data.forEach((question) => {
@@ -26,10 +26,9 @@ class Questions extends Component {
           }
         });
         await this.setState({
-          questions: questions,
-          currentQuestion: 1
+          questions: questions
         });
-        console.log(this.state);
+        console.log('state after getAllQuestionsAndAnswerChoices:', this.state);
       } catch(err) {
         console.log(err);
       }
@@ -38,9 +37,35 @@ class Questions extends Component {
     getAllQuestionsAndAnswerChoices();
   }
 
-  onQuestionsSubmit = (event) => {
+  onQuestionAnswerSelection = (questionIndex, answer) => {
+    // console.log(questionIndex);
+    // console.log(answer);
+    const answerChoices = this.state.answers;
+    answerChoices[questionIndex] = answer;
+    this.setState({
+      answers: answerChoices
+    });
+    console.log('state answers after selection', this.state.answers);
+  }
+
+  onQuestionsSubmit = async (event) => {
     event.preventDefault();
-    console.log('questions submitted with answers:');
+    // check selected answers with correct answers
+    let score = 0;
+    for(let i = 1; i < this.state.answers.length; i++) {
+      if(this.state.answers[i] === undefined) {
+        return;
+      }
+      if(this.state.answers[i] === this.state.questions[i].correct_answer) {
+        score++;
+      }
+    }
+    // add to db
+    const addScoreResponse = await axios.post('/game/add-score', {
+      score: score,
+      user_id: 3
+    });
+    console.log('addScoreResponse data', addScoreResponse.data);
   }
 
   render() {
@@ -51,14 +76,19 @@ class Questions extends Component {
           <div>
             <form onSubmit={this.onQuestionsSubmit}>
                 <ol>
-                {this.state.questions.map((question, index) => {
+                {this.state.questions.map((question, questionIndex) => {
                   return (
-                    <li key={index}>
+                    <li key={questionIndex}>
                       <p>{question.question}</p>
-                      {question.answer_choices.map((answer_choice, index) => {
+                      {question.answer_choices.map((answer_choice, answerChoiceIndex) => {
                         return (
-                          <div key={index}>
-                            <input type='radio' />
+                          <div key={answerChoiceIndex}>
+                            <input 
+                              type='radio' 
+                              value={answer_choice} 
+                              checked={answer_choice === this.state.answers[questionIndex]} 
+                              onChange={this.onQuestionAnswerSelection.bind(this, questionIndex, answer_choice)} 
+                            />
                             <label>{answer_choice}</label><br></br>
                           </div>
                         );
