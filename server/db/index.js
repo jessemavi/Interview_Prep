@@ -16,7 +16,7 @@ const connectToDB = async () => {
 
 connectToDB();
 
-const createDBTables = async () => {
+const createDBTables = () => {
   try {
     client.query(`
       drop table if exists questions cascade;
@@ -56,9 +56,9 @@ const createDBTables = async () => {
 
 createDBTables();
 
-const addQuestionsAndAnswerChoices = async () => {
+const addQuestionsAndAnswerChoices = () => {
   try {
-    await client.query(`
+    client.query(`
       insert into questions (question_content, correct_answer, category) values 
         ('What is the time complexity of merge sort?', 'O(n log n)', 'Sorting'),
         ('When doing graph search, which search method uses a queue data structure?', 'Breadth First Search(BFS)', 'Graphs'),

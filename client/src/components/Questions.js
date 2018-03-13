@@ -5,7 +5,8 @@ class Questions extends Component {
   constructor() {
     super();
     this.state = {
-      questions: []
+      questions: [],
+      answers: []
     }
 
     const getAllQuestionsAndAnswerChoices = async () => {
@@ -25,7 +26,8 @@ class Questions extends Component {
           }
         });
         await this.setState({
-          questions: questions
+          questions: questions,
+          currentQuestion: 1
         });
         console.log(this.state);
       } catch(err) {
@@ -36,15 +38,39 @@ class Questions extends Component {
     getAllQuestionsAndAnswerChoices();
   }
 
+  onQuestionsSubmit = (event) => {
+    event.preventDefault();
+    console.log('questions submitted with answers:');
+  }
+
   render() {
     return (
       <div>
         <h2>Questions</h2>
-        {this.state.questions.map((question, index) => {
-          return (
-            <p key={index}>{question.question}</p>
-          );
-        })}
+        {this.state.questions.length > 0 ? 
+          <div>
+            <form onSubmit={this.onQuestionsSubmit}>
+                <ol>
+                {this.state.questions.map((question, index) => {
+                  return (
+                    <li key={index}>
+                      <p>{question.question}</p>
+                      {question.answer_choices.map((answer_choice, index) => {
+                        return (
+                          <div key={index}>
+                            <input type='radio' />
+                            <label>{answer_choice}</label><br></br>
+                          </div>
+                        );
+                      })}
+                    </li>
+                  );
+                })}
+              </ol>
+              <input type='submit' />
+            </form>
+          </div>
+        : null}
       </div>
     );
   }
