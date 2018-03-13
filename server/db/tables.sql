@@ -8,14 +8,14 @@ create table if not exists users (
 
 create table if not exists questions (
   id serial primary key,
-  content text unique not null,
+  question_content text unique not null,
   correct_answer text not null,
   category text not null
 )
 
 create table if not exists question_choices (
   id serial primary key,
-  content text not null,
+  question_choice_content text not null,
   question_id integer references questions(id) not null
 )
 
@@ -27,7 +27,7 @@ create table if not exists game_scores (
 
 insert into questions (content, correct_answer, category) values 
   ('What is the time complexity of merge sort?', 'O(n log n)', 'Sorting'),
-  ('When doing graph search, which search method uses a queue data structure', 'Breadth First Search(BFS)', 'Graphs'),
+  ('When doing graph search, which search method uses a queue data structure?', 'Breadth First Search(BFS)', 'Graphs'),
   ('When traversing a tree, which traversal visits both node''s children before the parent?', 'Postorder traversal', 'Binary Trees')
 ;
 

@@ -6,7 +6,7 @@ const gameRouter = require('./routes/gameRouter');
 const port = process.env.port || 4000;
 
 // middleware
-app.use(logger('combined'));
+app.use(logger('dev'));
 
 app.use('/game', gameRouter);
 

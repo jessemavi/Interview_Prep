@@ -2,11 +2,15 @@ const express = require('express');
 const gameRouter = express.Router();
 const db = require('../db/index');
 
-// get all questions
+// get all questions and answer_choices
 gameRouter.get('/questions', async (req, res) => {
   try {
-    const allQuestions = await db.query(`select * from questions`);
-    res.send(allQuestions.rows);
+    const allQuestionsAndAnswerChoices = await db.query(`
+        select * 
+        from question_choices 
+        inner join questions on (question_choices.question_id = questions.id);
+      `);
+    res.send(allQuestionsAndAnswerChoices.rows);
   } catch(err) {
     console.log(err);
   }
