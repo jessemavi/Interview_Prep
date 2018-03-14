@@ -28,7 +28,7 @@ class Questions extends Component {
         await this.setState({
           questions: questions
         });
-        console.log('state after getAllQuestionsAndAnswerChoices:', this.state);
+        // console.log('state after getAllQuestionsAndAnswerChoices:', this.state);
       } catch(err) {
         console.log(err);
       }
@@ -61,11 +61,15 @@ class Questions extends Component {
       }
     }
     // add to db
-    const addScoreResponse = await axios.post('/game/add-score', {
-      score: score,
-      user_id: 3
-    });
-    console.log('addScoreResponse data', addScoreResponse.data);
+    try {
+      const addScoreResponse = await axios.post('/game/add-score', {
+        score: score,
+        user_id: 3
+      });
+      console.log('addScoreResponse data', addScoreResponse.data);
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   render() {
