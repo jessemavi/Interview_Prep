@@ -1,9 +1,38 @@
 const express = require('express');
 const gameRouter = express.Router();
 const db = require('../db/index');
+const passport = require("passport");
+const passportJWT = require("passport-jwt");
+
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+  secretOrKey: 'interview-secret'
+};
+
+// passport auth strategy
+const strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
+  try {
+    console.log('payload received', jwt_payload);
+    const query = await db.query(`select * from users where id = ${jwt_payload.id}`);
+    const user = query.rows[0];
+    console.log('user in passport strategy', user);
+    if (user) {
+      next(null, user);
+    } else {
+      next(null, false);
+    }
+  } catch(err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+passport.use(strategy);
 
 // get all questions and answer_choices
-gameRouter.get('/questions', async (req, res) => {
+gameRouter.get('/questions', passport.authenticate('jwt', { session: false }),  async (req, res) => {
   try {
     const allQuestionsAndAnswerChoices = await db.query(`
         select * 
@@ -18,7 +47,7 @@ gameRouter.get('/questions', async (req, res) => {
 
 // take user and score from request body and add to db
 // send back user and score
-gameRouter.post('/add-score', async (req, res) => {
+gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     console.log(req.body);
     const addedScore = await db.query(`

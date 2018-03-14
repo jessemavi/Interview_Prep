@@ -19,7 +19,7 @@ userRouter.post('/add-user', async (req, res) => {
     const user = query.rows[0];
     console.log('user', user);
 
-    const token = await jwt.sign({id: user.id}, 'interview-secret-1', {expiresIn: '10hr'});
+    const token = await jwt.sign({id: user.id}, 'interview-secret', {expiresIn: '10hr'});
 
     res.send({user_id: user.id, token: token});
   } catch(err) {
@@ -49,7 +49,7 @@ userRouter.post('/login', async (req, res) => {
     }
 
     // create token to send back in response
-    const token = await jwt.sign({id: user.id}, 'interview-secret-1', {expiresIn: '10hr'});
+    const token = await jwt.sign({id: user.id}, 'interview-secret', {expiresIn: '10hr'});
     res.send({user_id: user.id, token: token});
   } catch(err) {
     console.log(err);

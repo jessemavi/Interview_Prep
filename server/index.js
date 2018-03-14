@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+
 const gameRouter = require('./routes/gameRouter');
 const userRouter = require('./routes/userRouter');
 
@@ -10,6 +12,7 @@ const port = process.env.port || 4000;
 // middleware
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 app.use('/game', gameRouter);
 app.use('/user', userRouter);
