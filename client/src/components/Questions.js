@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 class Questions extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       questions: [],
       answers: []
@@ -11,7 +11,15 @@ class Questions extends Component {
 
     const getAllQuestionsAndAnswerChoices = async () => {
       try {
-        const questionsAndAnswerChoices = await axios.get('/game/questions');
+        const questionsAndAnswerChoices = await axios.post(`/game/questions/`,
+        {
+          category: this.props.match.params.category
+        }, 
+        {
+          headers: {
+            'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMTQ2NDI3LCJleHAiOjE1MjExODI0Mjd9.LH87Vv7vWBPbGVsgsoLKBztf1uyW9WrOl3YmNfyVcbk'
+          }
+        });
         // console.log(questionsAndAnswerChoices.data);
         const questions = [];
         // go through questionsAndAnswerChoices and add data for each question in an object in the questions array
@@ -50,22 +58,36 @@ class Questions extends Component {
 
   onQuestionsSubmit = async (event) => {
     event.preventDefault();
+    // if number of answers don't match number of questions return and don't allow user to submit
+    if(this.state.answers.length !== this.state.questions.length) {
+      return;
+    }
     // check selected answers with correct answers
     let score = 0;
-    for(let i = 1; i < this.state.answers.length; i++) {
-      if(this.state.answers[i] === undefined) {
-        return;
+    for(let i = 1; i < this.state.questions.length; i++) {
+      if(!this.state.answers[i] && !this.state.questions[i]) {
+        continue;
       }
       if(this.state.answers[i] === this.state.questions[i].correct_answer) {
         score++;
       }
     }
+
     // add to db
     try {
-      const addScoreResponse = await axios.post('/game/add-score', {
-        score: score,
-        user_id: 3
-      });
+      console.log('making post request to add score');
+      const addScoreResponse = await axios.post('/game/add-score', 
+        {
+          score: score,
+          category: this.props.match.params.category,
+          user_id: 1
+        },
+        {
+          headers: {
+            'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMTQ2NDI3LCJleHAiOjE1MjExODI0Mjd9.LH87Vv7vWBPbGVsgsoLKBztf1uyW9WrOl3YmNfyVcbk'
+          }
+        }
+      );
       console.log('addScoreResponse data', addScoreResponse.data);
     } catch(err) {
       console.log(err);

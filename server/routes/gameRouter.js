@@ -31,14 +31,14 @@ const strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
 
 passport.use(strategy);
 
-// get all questions and answer_choices
-gameRouter.get('/questions', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+// get all questions and answer_choices for selected category
+gameRouter.post('/questions', passport.authenticate('jwt', { session: false }),  async (req, res) => {
   try {
     const allQuestionsAndAnswerChoices = await db.query(`
-        select * 
-        from question_choices 
-        inner join questions on (question_choices.question_id = questions.id);
-      `);
+      select * 
+      from question_choices 
+      inner join questions on (question_choices.question_id = questions.id and questions.category = '${req.body.category}');
+    `);
     res.send(allQuestionsAndAnswerChoices.rows);
   } catch(err) {
     console.log(err);
@@ -51,7 +51,7 @@ gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), 
   try {
     console.log(req.body);
     const addedScore = await db.query(`
-      insert into game_scores (score, user_id) values (${req.body.score}, ${req.body.user_id})
+      insert into game_scores (score, category, user_id) values (${req.body.score}, '${req.body.category}', ${req.body.user_id})
       returning *;
     `);
     res.send(addedScore.rows[0]);

@@ -28,7 +28,8 @@ create table if not exists game_scores (
 insert into questions (content, correct_answer, category) values 
   ('What is the time complexity of merge sort?', 'O(n log n)', 'Sorting'),
   ('When doing graph search, which search method uses a queue data structure?', 'Breadth First Search(BFS)', 'Graphs'),
-  ('When traversing a tree, which traversal visits both node''s children before the parent?', 'Postorder traversal', 'Binary Trees')
+  ('When traversing a tree, which traversal visits both node''s children before the parent?', 'Postorder traversal', 'Binary Trees'),
+  ('What front-end framework/library has lifecycle methods?', 'React', 'JavaScript');
 ;
 
 insert into question_choices(content, question_id) values
@@ -39,5 +40,10 @@ insert into question_choices(content, question_id) values
   ('Breadth First Search(BFS)', 2),
   ('Preorder traveral', 3),
   ('Inorder traversal', 3),
-  ('Postorder traversal', 3)
+  ('Postorder traversal', 3),
+  ('Angular', 4),
+  ('Ember', 4),
+  ('Vue', 4),
+  ('React', 4),
+  ('Backbone', 4)
 ;
