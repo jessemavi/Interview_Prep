@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Signup from './components/Signup';
+import Login from './components/Login';
 import Main from './components/Main';
 import Questions from './components/Questions';
 
@@ -9,6 +10,7 @@ const AppRouter = () => {
     <Router>
       <div>
         <Route path='/signup' component={Signup} />
+        <Route path='/login' component={Login} />
         <Route path='/main' component={Main} />
         <Route path='/questions/:category' component={Questions} />
       </div>

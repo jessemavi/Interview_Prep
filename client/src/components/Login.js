@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-class Signup extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: '',
       email: '',
       password: ''
     };
-  }
-
-  onUsernameChange = (event) => {
-    this.setState({
-      username: event.target.value
-    });
   }
 
   onEmailChange = (event) => {
@@ -32,17 +25,16 @@ class Signup extends Component {
   onSubmit = async (event) => {
     event.preventDefault();
 
-    if(this.state.username.length === 0 || this.state.email.length || this.state.password.length === 0) {
+    if(this.state.email.length === 0 || this.state.password.length === 0) {
       return;
     }
 
-    const response = await axios.post('/user/add-user', {
-      username: this.state.username,
+    const response = await axios.post('/user/login', {
       email: this.state.email,
       password: this.state.password
     });
 
-    console.log('signup response', response.data);
+    console.log('login response', response.data);
 
     if(response.data.user_id && response.data.token) {
       localStorage.setItem('user_id', response.data.user_id);
@@ -56,12 +48,8 @@ class Signup extends Component {
   render() {
     return (
       <div>
-        <h3>Signup</h3>
+        <h3>Login</h3>
         <form onSubmit={this.onSubmit}>
-          <label>
-            Username:
-            <input type='text' name='username' onChange={this.onUsernameChange} />
-          </label>
           <label>
             Email:
             <input type='text' name='email' onChange={this.onEmailChange} />
@@ -77,4 +65,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default Login;
