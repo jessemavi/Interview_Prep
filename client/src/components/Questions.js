@@ -17,7 +17,7 @@ class Questions extends Component {
         }, 
         {
           headers: {
-            'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMTQ2NDI3LCJleHAiOjE1MjExODI0Mjd9.LH87Vv7vWBPbGVsgsoLKBztf1uyW9WrOl3YmNfyVcbk'
+            'Authorization': `JWT ${localStorage.getItem('token')}`
           }
         });
         // console.log(questionsAndAnswerChoices.data);
@@ -80,11 +80,11 @@ class Questions extends Component {
         {
           score: score,
           category: this.props.match.params.category,
-          user_id: 1
+          user_id: localStorage.getItem('user_id')
         },
         {
           headers: {
-            'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTIxMTQ2NDI3LCJleHAiOjE1MjExODI0Mjd9.LH87Vv7vWBPbGVsgsoLKBztf1uyW9WrOl3YmNfyVcbk'
+            'Authorization': `JWT ${localStorage.getItem('token')}`
           }
         }
       );
