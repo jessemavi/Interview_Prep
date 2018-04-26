@@ -36,19 +36,23 @@ class Signup extends Component {
       return;
     }
 
-    const response = await axios.post('/user/add-user', {
-      username: this.state.username,
-      email: this.state.email,
-      password: this.state.password
-    });
+    try {
+      const response = await axios.post('/user/add-user', {
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password
+      });
 
-    console.log('signup response', response.data);
+      console.log('signup response', response.data);
 
-    if(response.data.user_id && response.data.token) {
-      localStorage.setItem('user_id', response.data.user_id);
-      localStorage.setItem('token', response.data.token);
-      
-      this.props.history.push('/main');
+      if(response.data.user_id && response.data.token) {
+        localStorage.setItem('user_id', response.data.user_id);
+        localStorage.setItem('token', response.data.token);
+        
+        this.props.history.push('/main');
+      }
+    } catch(err) {
+      console.log(err);
     }
 
   }

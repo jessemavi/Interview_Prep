@@ -60,4 +60,18 @@ gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), 
   }
 });
 
+// get all scores for a user
+gameRouter.post('/user-dashboard', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    console.log(req.body);
+    const userScores = await db.query(`
+      select *
+      from game_scores where user_id = ${req.body.user_id};
+    `);
+    res.send(userScores.rows);
+  } catch(err) {
+    console.log(err);
+  }
+});
+
 module.exports = gameRouter;

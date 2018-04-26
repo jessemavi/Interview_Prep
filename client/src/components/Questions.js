@@ -89,6 +89,7 @@ class Questions extends Component {
         }
       );
       console.log('addScoreResponse data', addScoreResponse.data);
+      alert(`You answered ${addScoreResponse.data.score} questions correctly`);
     } catch(err) {
       console.log(err);
     }
