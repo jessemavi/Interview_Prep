@@ -5,6 +5,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Main from './components/Main';
 import Questions from './components/Questions';
+import UserDashboard from './components/UserDashboard';
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
         <Route path='/login' component={Login} />
         <Route path='/main' component={Main} />
         <Route path='/questions/:category' component={Questions} />
+        <Route path='/user-dashboard' component={UserDashboard} />
       </div>
     </Router>
   );

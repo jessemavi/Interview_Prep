@@ -37,7 +37,9 @@ gameRouter.post('/questions', passport.authenticate('jwt', { session: false }), 
     const allQuestionsAndAnswerChoices = await db.query(`
       select * 
       from question_choices 
-      inner join questions on (question_choices.question_id = questions.id and questions.category = '${req.body.category}');
+      inner join questions 
+      on (question_choices.question_id = questions.id 
+      and questions.category = '${req.body.category}');
     `);
     res.send(allQuestionsAndAnswerChoices.rows);
   } catch(err) {
@@ -51,7 +53,8 @@ gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), 
   try {
     console.log(req.body);
     const addedScore = await db.query(`
-      insert into game_scores (score, category, user_id) values (${req.body.score}, '${req.body.category}', ${req.body.user_id})
+      insert into game_scores (score, category, user_id) 
+      values (${req.body.score}, '${req.body.category}', ${req.body.user_id})
       returning *;
     `);
     res.send(addedScore.rows[0]);
@@ -60,13 +63,16 @@ gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), 
   }
 });
 
-// get all scores for a user
+// get all scores and sign up info for a user
 gameRouter.post('/user-dashboard', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     console.log(req.body);
     const userScores = await db.query(`
-      select *
-      from game_scores where user_id = ${req.body.user_id};
+      select username, email, created_at, score, category 
+      from users 
+      inner join game_scores 
+      on users.id = ${req.body.user_id} 
+      and game_scores.user_id = ${req.body.user_id};
     `);
     res.send(userScores.rows);
   } catch(err) {

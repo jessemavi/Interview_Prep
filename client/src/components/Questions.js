@@ -90,6 +90,7 @@ class Questions extends Component {
       );
       console.log('addScoreResponse data', addScoreResponse.data);
       alert(`You answered ${addScoreResponse.data.score} questions correctly`);
+      this.props.history.push('/user-dashboard');
     } catch(err) {
       console.log(err);
     }
