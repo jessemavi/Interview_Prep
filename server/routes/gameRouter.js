@@ -60,23 +60,37 @@ gameRouter.post('/add-score', passport.authenticate('jwt', { session: false }), 
     res.send(addedScore.rows[0]);
   } catch(err) {
     console.log(err);
+    res.send(err);
   }
 });
 
-// get all scores and sign up info for a user
-gameRouter.post('/user-dashboard', passport.authenticate('jwt', { session: false }), async (req, res) => {
+// get info for a user
+gameRouter.post('/user-info', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    console.log(req.body);
+    const user = await db.query(`
+      select username, email, created_at 
+      from users
+      where id = ${req.body.user_id};
+    `);
+    res.send(user.rows[0]);
+  } catch(err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+// get all scores for a user
+gameRouter.post('/user-scores', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
     const userScores = await db.query(`
-      select username, email, created_at, score, category 
-      from users 
-      inner join game_scores 
-      on users.id = ${req.body.user_id} 
-      and game_scores.user_id = ${req.body.user_id};
+      select * 
+      from game_scores
+      where user_id = ${req.body.user_id};
     `);
     res.send(userScores.rows);
   } catch(err) {
     console.log(err);
+    res.send(err);
   }
 });
 
